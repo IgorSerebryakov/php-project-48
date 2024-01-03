@@ -1,0 +1,19 @@
+{
+    "name": "hexlet/code",
+    "bin": [
+        "bin/gendiff"
+    ],
+    "description": "libraries",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "IgorSerebryakov",
+            "email": "serebryakov09@mail.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "docopt/docopt": "dev-master"
+    }
+}
