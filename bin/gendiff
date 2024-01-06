@@ -26,3 +26,4 @@ Options:
 DOC;
 
 $result = Docopt::handle($doc, array('version'=>'1.0.0'));
+
