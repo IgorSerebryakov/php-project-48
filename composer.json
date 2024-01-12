@@ -23,6 +23,7 @@
         "lstrojny/functional-php": "dev-main"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "4.0.x-dev"
+        "squizlabs/php_codesniffer": "4.0.x-dev",
+        "phpunit/phpunit": "10.5.x-dev"
     }
 }
