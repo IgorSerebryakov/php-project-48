@@ -15,12 +15,14 @@
     "minimum-stability": "dev",
     "autoload": {
         "files": [
-            "src/Diff.php"
+            "src/Diff.php",
+            "src/Parsers.php"
         ]
     },
     "require": {
         "docopt/docopt": "dev-master",
-        "lstrojny/functional-php": "dev-main"
+        "lstrojny/functional-php": "dev-main",
+        "symfony/yaml": "6.4.x-dev"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "4.0.x-dev",

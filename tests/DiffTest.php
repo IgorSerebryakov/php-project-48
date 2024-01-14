@@ -12,8 +12,16 @@ class DiffTest extends TestCase
     {
         $pathToFile1 = $this->getFixtureFullPath('file1.json');
         $pathToFile2 = $this->getFixtureFullPath('file2.json');
-        $pathToResultJson = $this->getFixtureFullPath('ResultJson');
+        $pathToResultJson = $this->getFixtureFullPath('Result');
         $this->assertEquals(file_get_contents($pathToResultJson), genDiff($pathToFile1, $pathToFile2));
+    }
+
+    public function testYml(): void
+    {
+        $pathToFile1 = $this->getFixtureFullPath('file1.yml');
+        $pathToFile2 = $this->getFixtureFullPath('file2.yml');
+        $pathToResultYml = $this->getFixtureFullPath('Result');
+        $this->assertEquals(file_get_contents($pathToResultYml), genDiff($pathToFile1, $pathToFile2));
     }
 
     public function getFixtureFullPath($fixtureName)

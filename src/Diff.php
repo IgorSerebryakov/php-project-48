@@ -2,17 +2,19 @@
 
 namespace Differ\Differ;
 
+use function Differ\Parsers\parseToArray;
+use function Functional\first;
 use function Functional\sort;
 
 function genDiff($firstFilePath, $secondFilePath, $format = 'stylish')
 {
-    $dataFromFirstFile = getContest($firstFilePath);
-    $dataFromSecondFile = getContest($secondFilePath);
+    $firstFileFormat = getFormat($firstFilePath);
+    $secondFileFormat = getFormat($secondFilePath);
 
-    $decodedDataFromFirstFile = getJsonDecode($dataFromFirstFile);
-    $decodedDataFromSecondFile = getJsonDecode($dataFromSecondFile);
+    $firstFileData = parseToArray($firstFilePath, $firstFileFormat);
+    $secondFileData = parseToArray($secondFilePath, $secondFileFormat);
 
-    return getDiff($decodedDataFromFirstFile, $decodedDataFromSecondFile);
+    return getDiff($firstFileData, $secondFileData);
 }
 
 function getDiff(array $dataFromFirstFile, array $dataFromSecondFile)
@@ -39,9 +41,9 @@ function getDiff(array $dataFromFirstFile, array $dataFromSecondFile)
     return "{\n" . implode("\n", $diff) . "\n}";
 }
 
-function getJsonDecode($file)
+function getFormat($path): string
 {
-    return json_decode($file, true);
+    return pathinfo($path, PATHINFO_EXTENSION);
 }
 
 function getValue($value)
@@ -49,7 +51,4 @@ function getValue($value)
     return is_bool($value) ? var_export($value, true) : $value;
 }
 
-function getContest($path)
-{
-    return file_get_contents($path);
-}
+
