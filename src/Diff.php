@@ -50,5 +50,3 @@ function getValue($value)
 {
     return is_bool($value) ? var_export($value, true) : $value;
 }
-
-
