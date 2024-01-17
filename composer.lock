@@ -2028,12 +2028,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPCSStandards/PHP_CodeSniffer.git",
-                "reference": "00a548d312c73f0e80a5fa7e639bb0cca6e52460"
+                "reference": "d703e1f6fd7a1cb8958a38a63289c24e08bce46e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/00a548d312c73f0e80a5fa7e639bb0cca6e52460",
-                "reference": "00a548d312c73f0e80a5fa7e639bb0cca6e52460",
+                "url": "https://api.github.com/repos/PHPCSStandards/PHP_CodeSniffer/zipball/d703e1f6fd7a1cb8958a38a63289c24e08bce46e",
+                "reference": "d703e1f6fd7a1cb8958a38a63289c24e08bce46e",
                 "shasum": ""
             },
             "require": {
@@ -2100,7 +2100,7 @@
                     "type": "open_collective"
                 }
             ],
-            "time": "2024-01-10T13:59:37+00:00"
+            "time": "2024-01-17T13:46:54+00:00"
         },
         {
             "name": "theseer/tokenizer",
@@ -2158,6 +2158,7 @@
     "stability-flags": {
         "docopt/docopt": 20,
         "lstrojny/functional-php": 20,
+        "symfony/yaml": 20,
         "squizlabs/php_codesniffer": 20,
         "phpunit/phpunit": 20
     },
