@@ -14,31 +14,71 @@ function genDiff($firstFilePath, $secondFilePath, $format = 'stylish')
     $firstFileData = parseToArray($firstFilePath, $firstFileFormat);
     $secondFileData = parseToArray($secondFilePath, $secondFileFormat);
 
-    return getDiff($firstFileData, $secondFileData);
+    return getDiffAST($firstFileData, $secondFileData);
 }
 
-function getDiff(array $dataFromFirstFile, array $dataFromSecondFile)
+function getDiffAST($dataFromFirstFile, $dataFromSecondFile)
 {
-    $mergedFiles = array_merge($dataFromFirstFile, $dataFromSecondFile);
+    $mergedFiles = [...$dataFromFirstFile, ...$dataFromSecondFile];
     $keys = array_keys($mergedFiles);
     $sortedKeys = sort($keys, fn($left, $right) => strcmp($left, $right));
 
-    $diff = array_reduce($sortedKeys, function ($acc, $key) use ($dataFromFirstFile, $dataFromSecondFile) {
-        if (!array_key_exists($key, $dataFromSecondFile)) {
-            $acc[] = "  - {$key}: " . getValue($dataFromFirstFile[$key]);
-        } elseif (!array_key_exists($key, $dataFromFirstFile)) {
-            $acc[] = "  + {$key}: " . getValue($dataFromSecondFile[$key]);
+//    $diff = array_reduce($sortedKeys, function ($acc, $key) use ($dataFromFirstFile, $dataFromSecondFile) {
+//        if (!array_key_exists($key, $dataFromSecondFile)) {
+//            $acc[] = "  - {$key}: " . getValue($dataFromFirstFile[$key]);
+//        } elseif (!array_key_exists($key, $dataFromFirstFile)) {
+//            $acc[] = "  + {$key}: " . getValue($dataFromSecondFile[$key]);
+//        } elseif ($dataFromFirstFile[$key] !== $dataFromSecondFile[$key]) {
+//            $acc[] = "  - {$key}: " . getValue($dataFromFirstFile[$key]);
+//            $acc[] = "  + {$key}: " . getValue($dataFromSecondFile[$key]);
+//        } else {
+//            $acc[] = "    {$key}: " . getValue($dataFromFirstFile[$key]);
+//        }
+
+    $iter = array_map(function ($key) use ($dataFromFirstFile, $dataFromSecondFile) {
+
+        if (!array_key_exists($key, $dataFromFirstFile)) {
+            return [
+                'key' => $key,
+                'value' => $dataFromSecondFile[$key],
+                'type' => gettype($dataFromSecondFile[$key]),
+                'status' => 'added'
+            ];
+
+        } elseif (!array_key_exists($key, $dataFromSecondFile)) {
+            return [
+                'key' => $key,
+                'value' => $dataFromFirstFile[$key],
+                'type' => gettype($dataFromFirstFile[$key]),
+                'status' => 'deleted'
+            ];
+
         } elseif ($dataFromFirstFile[$key] !== $dataFromSecondFile[$key]) {
-            $acc[] = "  - {$key}: " . getValue($dataFromFirstFile[$key]);
-            $acc[] = "  + {$key}: " . getValue($dataFromSecondFile[$key]);
-        } else {
-            $acc[] = "    {$key}: " . getValue($dataFromFirstFile[$key]);
+            $oldValue = $dataFromFirstFile[$key];
+            $newValue = $dataFromSecondFile[$key];
+            $oldType = gettype($oldValue);
+            $newType = gettype($newValue);
+
+            return [
+                'key' => $key,
+                'oldValue' => $oldValue,
+                'oldType' => $oldType,
+                'newValue' => $newValue,
+                'newType' => $newType,
+                'status' => 'changed'
+            ];
+        } elseif (is_array($dataFromFirstFile[$key] && is_array($dataFromSecondFile[$key]))) {
+            return [
+                'key' => $key,
+                'status' => 'root',
+                'children' => getDiffAST($dataFromFirstFile[$key], $dataFromSecondFile[$key])
+            ];
         }
 
-        return $acc;
-    }, []);
+    }, $sortedKeys);
 
-    return "{\n" . implode("\n", $diff) . "\n}";
+
+    return $iter;
 }
 
 function getFormat($path): string

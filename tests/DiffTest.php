@@ -24,6 +24,13 @@ class DiffTest extends TestCase
         $this->assertEquals(file_get_contents($pathToResultYml), genDiff($pathToFile1, $pathToFile2));
     }
 
+    public function testDiff(): void
+    {
+        $pathToFile1 = $this->getFixtureFullPath('file1.yml');
+        $pathToFile2 = $this->getFixtureFullPath('file2.yml');
+        $this->assertEquals(['key' => 'test'], genDiff($pathToFile1, $pathToFile2));
+    }
+
     public function getFixtureFullPath($fixtureName)
     {
         $parts = [__DIR__, 'fixtures', $fixtureName];
