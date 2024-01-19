@@ -53,6 +53,13 @@ function getDiffAST($dataFromFirstFile, $dataFromSecondFile)
                 'status' => 'deleted'
             ];
 
+        } elseif (is_array($dataFromFirstFile[$key]) && is_array($dataFromSecondFile[$key])) {
+            return [
+                'key' => $key,
+                'status' => 'root',
+                'children' => getDiffAST($dataFromFirstFile[$key], $dataFromSecondFile[$key])
+            ];
+
         } elseif ($dataFromFirstFile[$key] !== $dataFromSecondFile[$key]) {
             $oldValue = $dataFromFirstFile[$key];
             $newValue = $dataFromSecondFile[$key];
@@ -67,11 +74,13 @@ function getDiffAST($dataFromFirstFile, $dataFromSecondFile)
                 'newType' => $newType,
                 'status' => 'changed'
             ];
-        } elseif (is_array($dataFromFirstFile[$key] && is_array($dataFromSecondFile[$key]))) {
+
+        } else {
             return [
                 'key' => $key,
-                'status' => 'root',
-                'children' => getDiffAST($dataFromFirstFile[$key], $dataFromSecondFile[$key])
+                'value' => $dataFromFirstFile[$key],
+                'type' => gettype($dataFromFirstFile[$key]),
+                'status' => 'unchanged'
             ];
         }
 
