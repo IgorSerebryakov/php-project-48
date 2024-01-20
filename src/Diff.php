@@ -3,7 +3,6 @@
 namespace Differ\Differ;
 
 use function Differ\Parsers\parseToArray;
-use function Functional\first;
 use function Functional\sort;
 
 function genDiff($firstFilePath, $secondFilePath, $format = 'stylish')
@@ -17,25 +16,13 @@ function genDiff($firstFilePath, $secondFilePath, $format = 'stylish')
     return getDiffAST($firstFileData, $secondFileData);
 }
 
-function getDiffAST($dataFromFirstFile, $dataFromSecondFile)
+function getDiffAST(array $dataFromFirstFile, array $dataFromSecondFile): array
 {
     $mergedFiles = [...$dataFromFirstFile, ...$dataFromSecondFile];
     $keys = array_keys($mergedFiles);
     $sortedKeys = sort($keys, fn($left, $right) => strcmp($left, $right));
 
-//    $diff = array_reduce($sortedKeys, function ($acc, $key) use ($dataFromFirstFile, $dataFromSecondFile) {
-//        if (!array_key_exists($key, $dataFromSecondFile)) {
-//            $acc[] = "  - {$key}: " . getValue($dataFromFirstFile[$key]);
-//        } elseif (!array_key_exists($key, $dataFromFirstFile)) {
-//            $acc[] = "  + {$key}: " . getValue($dataFromSecondFile[$key]);
-//        } elseif ($dataFromFirstFile[$key] !== $dataFromSecondFile[$key]) {
-//            $acc[] = "  - {$key}: " . getValue($dataFromFirstFile[$key]);
-//            $acc[] = "  + {$key}: " . getValue($dataFromSecondFile[$key]);
-//        } else {
-//            $acc[] = "    {$key}: " . getValue($dataFromFirstFile[$key]);
-//        }
-
-    $iter = array_map(function ($key) use ($dataFromFirstFile, $dataFromSecondFile) {
+    return array_map(function ($key) use ($dataFromFirstFile, $dataFromSecondFile) {
 
         if (!array_key_exists($key, $dataFromFirstFile)) {
             return [
@@ -85,9 +72,6 @@ function getDiffAST($dataFromFirstFile, $dataFromSecondFile)
         }
 
     }, $sortedKeys);
-
-
-    return $iter;
 }
 
 function getFormat($path): string
