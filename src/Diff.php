@@ -63,6 +63,7 @@ function getDiffAST(array $dataFromFirstFile, array $dataFromSecondFile): array
             ];
 
         } else {
+
             return [
                 'key' => $key,
                 'value' => $dataFromFirstFile[$key],

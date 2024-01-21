@@ -1,82 +1,60 @@
 <?php
 
-use Symfony\Component\Yaml\Yaml;
-use function Differ\Parsers\parseToArray;
 
-$file1 = [
-    "common" => [
-        "setting1" => "Value 1",
-        "setting2" => 200,
-        "setting3" => true,
-        "setting6" => [
-            "key" => "value",
-            "doge" => [
-                "wow" => ""
-            ]
-        ]
-    ],
-    "group1" => [
-        "baz" => "bas",
-        "foo" => "bar",
-        "nest" => [
-            "key" => "value"
-        ]
-    ],
-    "group2" => [
-        "abc" => 12345,
-        "deep" => [
-            "id" => 45
-        ]
-    ]
-];
-
-$file2 = [
-    "common" => [
-        "follow" => false,
-        "setting1" => "Value 1",
-        "setting3" => null,
-        "setting4" => "blah blah",
-        "setting5" => [
-            "key5" => "value5"
-        ],
-        "setting6" => [
-            "key" => "value",
-            "ops" => "vops",
-            "doge" => [
-                "wow" => "so much"
-            ]
-        ]
-    ],
-    "group1" => [
-        "foo" => "bar",
-        "baz" => "bars",
-        "nest" => "str"
-    ],
-    "group3" => [
-        "deep" => [
-            "id" => [
-                "number" => 45
-            ]
-        ],
-        "fee" => 100500
-    ]
-];
-
-$mergedFiles = array_merge($file1, $file2);
-$keys = array_keys($mergedFiles);
-
-$arr1 = ['key' => 5];
-$arr2 = [];
-
-function parseToArray1(string $path, string $format)
+use function Functional\flatten;
+function toString($value)
 {
-    switch ($format) {
-        case "json":
-            $array = json_decode(file_get_contents($path), true);
-            break;
-    }
-
-    return $array;
+    return trim(var_export($value, true), "'");
 }
 
-var_dump(parseToArray1('/home/xen/php-project-48/tests/fixtures/file2.json', 'json'));
+// BEGIN
+function getCurrentSpacesWithoutLeftShit(int $depth, int $leftShift = 0): string
+{
+    $countSpaces = 4;
+    $currentCountSpaces = $depth * $countSpaces - $leftShift;
+
+    return str_repeat(' ', $currentCountSpaces);
+}
+
+function getArrayValueToString(array $value, int $depth): string
+{
+    $currentValue = $value['value'];
+    $newDepth = $depth + 1;
+
+    $iter = function ($currentValue) use (&$iter, $newDepth) {
+        if (!is_array($currentValue)) {
+            return toString($currentValue);
+        }
+
+        $currentIndent = getCurrentSpacesWithoutLeftShit($newDepth);
+        $bracketIndent = $currentIndent;
+
+        $lines = array_map(
+            fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $newDepth + 1)}",
+            array_keys($currentValue),
+            $currentValue
+        );
+
+        $result = ['{', ...$lines, "{$bracketIndent}}"];
+
+        return implode("\n", $result);
+    };
+
+    return $iter($currentValue);
+}
+
+$data = [
+    'key' => 'group3',
+    'value' => [
+        'deep' => [
+            'id' => [
+                'number' => 45,
+            ],
+        ],
+        'fee' => 100500,
+    ],
+    'type' => 'array',
+    'status' => 'added',
+];
+
+print_r(getArrayValueToString($data, 1));

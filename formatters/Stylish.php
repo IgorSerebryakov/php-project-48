@@ -2,26 +2,50 @@
 
 namespace Formatters\Stylish;
 
-function getStylishFormat($value, string $replacer = ' ', int $spacesCount = 4, int $offsetLeft = 2): string
+function getCurrentSpacesWithoutLeftShit(int $depth, int $leftShift = 0): string
 {
-    $iter = function ($currentValue, $depth) use (&$iter, $replacer, $spacesCount, $offsetLeft) {
+    $countSpaces = 4;
+    $currentCountSpaces = $depth * $countSpaces - $leftShift;
 
-        if (!array_key_exists('children', $currentValue)) {
-            return $currentValue['value'];
+    return str_repeat(' ', $currentCountSpaces);
+}
+
+function getCurrentSpacesWithLeftShift(int $depth): string
+{
+    return getCurrentSpacesWithoutLeftShit($depth, 2);
+}
+
+function getArrayValueToString(array $value, int $depth): string
+{
+    $currentValue = $value['value'];
+
+    $iter = function ($currentValue) use (&$iter, $depth) {
+        if (!is_array($currentValue)) {
+            return toString($currentValue);
         }
 
-        $indent = $depth * $spacesCount - $offsetLeft;
-        $currentIndent = str_repeat($replacer, $indent) . $offsetLeft;
-        $bracketIndent = str_repeat($replacer, $indent);
+        $currentIndent = getCurrentSpacesWithoutLeftShit($depth);
+        $bracketIndent = $currentIndent;
 
         $lines = array_map(
-            fn($val) => "{$currentIndent}{$val['key']}: ",
+            fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $depth + 1)}",
+            array_keys($currentValue),
             $currentValue
-        )
-    }
+            );
 
-    return $iter($value, 1);
+        $result = ['{', ...$lines, "{$bracketIndent}"];
+
+        return implode("\n", $result);
+    };
+
+    return $iter($currentValue);
 }
+
+function toString($value)
+{
+    return trim(var_export($value, true), "'");
+}
+
 
 // Array (
 //    0 => Array (
@@ -158,6 +182,3 @@ function getStylishFormat($value, string $replacer = ' ', int $spacesCount = 4, 
 //]
 //)
 
-function toString($value) {
-    return trim(var_export($value, true), "'");
-}
