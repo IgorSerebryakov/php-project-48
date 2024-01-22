@@ -15,30 +15,30 @@ function getCurrentSpacesWithLeftShift(int $depth): string
     return getCurrentSpacesWithoutLeftShit($depth, 2);
 }
 
-function getArrayValueToString(array $value, int $depth): string
+function getArrayValueToString(array $value, $depth = 1): string
 {
     $currentValue = $value['value'];
 
-    $iter = function ($currentValue) use (&$iter, $depth) {
+    $iter = function ($currentValue, $depth) use (&$iter) {
         if (!is_array($currentValue)) {
             return toString($currentValue);
         }
 
         $currentIndent = getCurrentSpacesWithoutLeftShit($depth);
-        $bracketIndent = $currentIndent;
+        $bracketIndent = getCurrentSpacesWithoutLeftShit($depth - 1);
 
         $lines = array_map(
             fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $depth + 1)}",
             array_keys($currentValue),
             $currentValue
-            );
+        );
 
-        $result = ['{', ...$lines, "{$bracketIndent}"];
+        $result = ['{', ...$lines, "{$bracketIndent}}"];
 
         return implode("\n", $result);
     };
 
-    return $iter($currentValue);
+    return $iter($currentValue, $depth + 1);
 }
 
 function toString($value)

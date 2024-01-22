@@ -7,7 +7,6 @@ function toString($value)
     return trim(var_export($value, true), "'");
 }
 
-// BEGIN
 function getCurrentSpacesWithoutLeftShit(int $depth, int $leftShift = 0): string
 {
     $countSpaces = 4;
@@ -16,21 +15,20 @@ function getCurrentSpacesWithoutLeftShit(int $depth, int $leftShift = 0): string
     return str_repeat(' ', $currentCountSpaces);
 }
 
-function getArrayValueToString(array $value, int $depth): string
+function getArrayValueToString(array $value, $depth = 1): string
 {
     $currentValue = $value['value'];
-    $newDepth = $depth + 1;
 
-    $iter = function ($currentValue) use (&$iter, $newDepth) {
+    $iter = function ($currentValue, $depth) use (&$iter) {
         if (!is_array($currentValue)) {
             return toString($currentValue);
         }
 
-        $currentIndent = getCurrentSpacesWithoutLeftShit($newDepth);
-        $bracketIndent = $currentIndent;
+        $currentIndent = getCurrentSpacesWithoutLeftShit($depth);
+        $bracketIndent = getCurrentSpacesWithoutLeftShit($depth - 1);
 
         $lines = array_map(
-            fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $newDepth + 1)}",
+            fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $depth + 1)}",
             array_keys($currentValue),
             $currentValue
         );
@@ -40,7 +38,7 @@ function getArrayValueToString(array $value, int $depth): string
         return implode("\n", $result);
     };
 
-    return $iter($currentValue);
+    return $iter($currentValue, $depth + 1);
 }
 
 $data = [
@@ -57,4 +55,4 @@ $data = [
     'status' => 'added',
 ];
 
-print_r(getArrayValueToString($data, 1));
+print_r("  + group3: " . getArrayValueToString($data, 1));
