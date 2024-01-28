@@ -2,6 +2,76 @@
 
 namespace Formatters\Stylish;
 
+function getStylish(array $tree, int $depth = 1): string
+{
+    $coll = array_map(function ($val) use ($depth) {
+        if ($val['status'] === 'added') {
+            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '+') . getValueToString(getValue($val), $depth);
+
+        } elseif ($val['status'] === 'deleted') {
+            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '-') . getValueToString(getValue($val), $depth);
+
+        } elseif ($val['status'] === 'unchanged') {
+            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, ' ') . getValueToString(getValue($val), $depth);
+
+        } elseif ($val['status'] === 'changed') {
+            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '-') . getValueToString(getOldValue($val), $depth) . "\n"
+                 . getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '+') . getValueToString(getNewValue($val), $depth);
+
+        } elseif ($val['status'] === 'root') {
+            $children = getStylish(getChildren($val), $depth + 1);
+            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, ' ') . getChildrenWithBraces($children, $depth);
+        }
+    }, $tree);
+
+    return implode("\n", $coll);
+}
+
+function getResultStylish($result)
+{
+    return getBraces(getStylish($result));
+}
+
+function getChildrenWithBraces($children, $depth)
+{
+    return " {\n{$children}\n" . getCurrentSpacesWithoutLeftShit($depth) . "}";
+}
+
+function getSpecialWithKey($value, string $special)
+{
+    return "{$special} " . getKey($value) . ":";
+}
+
+function getKey($tree)
+{
+    return $tree['key'];
+}
+
+function getValue($tree)
+{
+    return $tree['value'];
+}
+
+function getNewValue($tree)
+{
+    return $tree['newValue'];
+}
+
+function getOldValue($tree)
+{
+    return $tree['oldValue'];
+}
+
+function getChildren($tree)
+{
+    return $tree['children'];
+}
+
+function getBraces($result)
+{
+    return "{\n{$result}\n}";
+}
+
 function getCurrentSpacesWithoutLeftShit(int $depth, int $leftShift = 0): string
 {
     $countSpaces = 4;
@@ -15,35 +85,45 @@ function getCurrentSpacesWithLeftShift(int $depth): string
     return getCurrentSpacesWithoutLeftShit($depth, 2);
 }
 
-function getArrayValueToString(array $value, $depth = 1): string
+function getValueToString($value, $depth = 1)
 {
-    $currentValue = $value['value'];
+    if (is_array($value)) {
+        return getArrayValueToString($value, $depth);
+    } else {
+        return toString($value);
+    }
+}
 
-    $iter = function ($currentValue, $depth) use (&$iter) {
-        if (!is_array($currentValue)) {
-            return toString($currentValue);
+function getArrayValueToString (array $value, $depth = 1): string
+{
+    $iter = function ($value, $depth) use (&$iter) {
+        if (!is_array($value)) {
+            return toString($value);
         }
 
         $currentIndent = getCurrentSpacesWithoutLeftShit($depth);
         $bracketIndent = getCurrentSpacesWithoutLeftShit($depth - 1);
 
         $lines = array_map(
-            fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $depth + 1)}",
-            array_keys($currentValue),
-            $currentValue
+            fn($key, $val) => "{$currentIndent}{$key}:{$iter($val, $depth + 1)}",
+            array_keys($value),
+            $value
         );
 
-        $result = ['{', ...$lines, "{$bracketIndent}}"];
+        $result = [' {', ...$lines, "{$bracketIndent}}"];
 
         return implode("\n", $result);
     };
 
-    return $iter($currentValue, $depth + 1);
+    return $iter($value, $depth + 1);
 }
 
 function toString($value)
 {
-    return trim(var_export($value, true), "'");
+    if ($value === "") {
+        return "";
+    }
+    return $value === null ? ' null' : ' ' . trim(var_export($value, true), "'");
 }
 
 

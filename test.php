@@ -17,11 +17,9 @@ function getCurrentSpacesWithoutLeftShit(int $depth, int $leftShift = 0): string
 
 function getArrayValueToString(array $value, $depth = 1): string
 {
-    $currentValue = $value['value'];
-
-    $iter = function ($currentValue, $depth) use (&$iter) {
-        if (!is_array($currentValue)) {
-            return toString($currentValue);
+    $iter = function ($value, $depth) use (&$iter) {
+        if (!is_array($value)) {
+            return toString($value);
         }
 
         $currentIndent = getCurrentSpacesWithoutLeftShit($depth);
@@ -29,8 +27,8 @@ function getArrayValueToString(array $value, $depth = 1): string
 
         $lines = array_map(
             fn($key, $val) => "{$currentIndent}{$key}: {$iter($val, $depth + 1)}",
-            array_keys($currentValue),
-            $currentValue
+            array_keys($value),
+            $value
         );
 
         $result = ['{', ...$lines, "{$bracketIndent}}"];
@@ -38,7 +36,7 @@ function getArrayValueToString(array $value, $depth = 1): string
         return implode("\n", $result);
     };
 
-    return $iter($currentValue, $depth + 1);
+    return $iter($value, $depth + 1);
 }
 
 $data = [
@@ -55,4 +53,6 @@ $data = [
     'status' => 'added',
 ];
 
-print_r("  + group3: " . getArrayValueToString($data, 1));
+// print_r(getArrayValueToString($data['value'], 1));
+
+print_r(toString(null));

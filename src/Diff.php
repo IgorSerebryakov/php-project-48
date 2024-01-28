@@ -3,7 +3,10 @@
 namespace Differ\Differ;
 
 use function Differ\Parsers\parseToArray;
+use function Formatters\Stylish\getResultStylish;
 use function Functional\sort;
+use function Formatters\Stylish\getStylish;
+
 
 function genDiff($firstFilePath, $secondFilePath, $format = 'stylish')
 {
@@ -13,7 +16,7 @@ function genDiff($firstFilePath, $secondFilePath, $format = 'stylish')
     $firstFileData = parseToArray($firstFilePath, $firstFileFormat);
     $secondFileData = parseToArray($secondFilePath, $secondFileFormat);
 
-    return getDiffAST($firstFileData, $secondFileData);
+    return getResultStylish((getDiffAST($firstFileData, $secondFileData)));
 }
 
 function getDiffAST(array $dataFromFirstFile, array $dataFromSecondFile): array
