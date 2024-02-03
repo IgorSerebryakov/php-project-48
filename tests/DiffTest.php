@@ -8,7 +8,7 @@ use function Differ\Differ\genDiff;
 
 class DiffTest extends TestCase
 {
-    public function testJson(): void
+    public function testJsonStylish(): void
     {
         $pathToFile1 = $this->getFixtureFullPath('file1.json');
         $pathToFile2 = $this->getFixtureFullPath('file2.json');
@@ -16,7 +16,7 @@ class DiffTest extends TestCase
         $this->assertEquals(file_get_contents($pathToResultJson), genDiff($pathToFile1, $pathToFile2));
     }
 
-    public function testYml(): void
+    public function testYmlStylish(): void
     {
         $pathToFile1 = $this->getFixtureFullPath('file1.yml');
         $pathToFile2 = $this->getFixtureFullPath('file2.yml');
@@ -24,14 +24,14 @@ class DiffTest extends TestCase
         $this->assertEquals(file_get_contents($pathToResultYml), genDiff($pathToFile1, $pathToFile2));
     }
 
-    public function testDiff(): void
+    public function testJsonPlain(): void
     {
-        $pathToFile3 = $this->getFixtureFullPath('file1.json');
-        $pathToFile4 = $this->getFixtureFullPath('file2.json');
-        $pathToFile1 = $this->getFixtureFullPath('file1.yml');
-        $pathToFile2 = $this->getFixtureFullPath('file2.yml');
-        $this->assertEquals(genDiff($pathToFile3, $pathToFile4), genDiff($pathToFile1, $pathToFile2));
+        $pathToFile1 = $this->getFixtureFullPath('file1.json');
+        $pathToFile2 = $this->getFixtureFullPath('file2.json');
+        $pathToResultJson = $this->getFixtureFullPath('ResultPlain');
+        $this->assertEquals(file_get_contents($pathToResultJson), genDiff($pathToFile1, $pathToFile2));
     }
+
 
     public function getFixtureFullPath($fixtureName)
     {
