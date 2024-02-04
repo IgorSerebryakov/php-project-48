@@ -24,7 +24,7 @@
         ]
     },
     "require": {
-        "docopt/docopt": "dev-master",
+        "docopt/docopt": ">=5.3",
         "lstrojny/functional-php": "dev-main",
         "symfony/yaml": "6.4.x-dev"
     },
