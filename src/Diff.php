@@ -6,7 +6,6 @@ use function Differ\Parsers\parseToArray;
 use function Functional\sort;
 use function Differ\Differ\Formatters\getFormatter;
 
-
 function genDiff($firstFilePath, $secondFilePath, $formatName = 'stylish')
 {
     $firstFileFormat = getFormat($firstFilePath);
@@ -33,7 +32,6 @@ function getAST(array $dataFromFirstFile, array $dataFromSecondFile): array
                 'type' => gettype($dataFromSecondFile[$key]),
                 'status' => 'added'
             ];
-
         } elseif (!array_key_exists($key, $dataFromSecondFile)) {
             return [
                 'key' => $key,
@@ -41,20 +39,17 @@ function getAST(array $dataFromFirstFile, array $dataFromSecondFile): array
                 'type' => gettype($dataFromFirstFile[$key]),
                 'status' => 'deleted'
             ];
-
         } elseif (is_array($dataFromFirstFile[$key]) && is_array($dataFromSecondFile[$key])) {
             return [
                 'key' => $key,
                 'status' => 'root',
                 'children' => getAST($dataFromFirstFile[$key], $dataFromSecondFile[$key])
             ];
-
         } elseif ($dataFromFirstFile[$key] !== $dataFromSecondFile[$key]) {
             $oldValue = $dataFromFirstFile[$key];
             $newValue = $dataFromSecondFile[$key];
             $oldType = gettype($oldValue);
             $newType = gettype($newValue);
-
             return [
                 'key' => $key,
                 'oldValue' => $oldValue,
@@ -63,9 +58,7 @@ function getAST(array $dataFromFirstFile, array $dataFromSecondFile): array
                 'newType' => $newType,
                 'status' => 'changed'
             ];
-
         } else {
-
             return [
                 'key' => $key,
                 'value' => $dataFromFirstFile[$key],
@@ -73,7 +66,6 @@ function getAST(array $dataFromFirstFile, array $dataFromSecondFile): array
                 'status' => 'unchanged'
             ];
         }
-
     }, $sortedKeys);
 }
 
