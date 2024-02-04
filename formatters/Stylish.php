@@ -2,7 +2,7 @@
 
 namespace Formatters\Stylish;
 
-function getStylish(array $tree, int $depth = 1): string
+function getStylishWithoutBraces(array $tree, int $depth = 1): string
 {
     $coll = array_map(function ($val) use ($depth) {
         if ($val['status'] === 'added') {
@@ -19,7 +19,7 @@ function getStylish(array $tree, int $depth = 1): string
                  . getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '+') . getValueToString(getNewValue($val), $depth);
 
         } elseif ($val['status'] === 'root') {
-            $children = getStylish(getChildren($val), $depth + 1);
+            $children = getStylishWithoutBraces(getChildren($val), $depth + 1);
             return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, ' ') . getChildrenWithBraces($children, $depth);
         }
     }, $tree);
@@ -27,9 +27,9 @@ function getStylish(array $tree, int $depth = 1): string
     return implode("\n", $coll);
 }
 
-function getResultStylish($result)
+function getStylish($result)
 {
-    return getBraces(getStylish($result));
+    return getBraces(getStylishWithoutBraces($result));
 }
 
 function getChildrenWithBraces($children, $depth)

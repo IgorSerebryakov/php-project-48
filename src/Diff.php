@@ -3,24 +3,22 @@
 namespace Differ\Differ;
 
 use function Differ\Parsers\parseToArray;
-use function Formatters\Stylish\getResultStylish;
 use function Functional\sort;
-use function Formatters\Stylish\getStylish;
-use function Formatters\Plain\getPlain;
+use function Differ\Differ\Formatters\getFormatter;
 
 
-function genDiff($firstFilePath, $secondFilePath, $format = 'stylish')
+function genDiff($firstFilePath, $secondFilePath, $formatName = 'stylish')
 {
     $firstFileFormat = getFormat($firstFilePath);
     $secondFileFormat = getFormat($secondFilePath);
 
-    $firstFileData = parseToArray($firstFilePath, $firstFileFormat);
-    $secondFileData = parseToArray($secondFilePath, $secondFileFormat);
+    $firstFileData = parseToArray(getRealPath($firstFilePath), $firstFileFormat);
+    $secondFileData = parseToArray(getRealPath($secondFilePath), $secondFileFormat);
 
-    return getPlain((getDiffAST($firstFileData, $secondFileData)));
+    return getFormatter($formatName, getAST($firstFileData, $secondFileData));
 }
 
-function getDiffAST(array $dataFromFirstFile, array $dataFromSecondFile): array
+function getAST(array $dataFromFirstFile, array $dataFromSecondFile): array
 {
     $mergedFiles = [...$dataFromFirstFile, ...$dataFromSecondFile];
     $keys = array_keys($mergedFiles);
@@ -48,7 +46,7 @@ function getDiffAST(array $dataFromFirstFile, array $dataFromSecondFile): array
             return [
                 'key' => $key,
                 'status' => 'root',
-                'children' => getDiffAST($dataFromFirstFile[$key], $dataFromSecondFile[$key])
+                'children' => getAST($dataFromFirstFile[$key], $dataFromSecondFile[$key])
             ];
 
         } elseif ($dataFromFirstFile[$key] !== $dataFromSecondFile[$key]) {
@@ -79,12 +77,22 @@ function getDiffAST(array $dataFromFirstFile, array $dataFromSecondFile): array
     }, $sortedKeys);
 }
 
+function getRealPath($filePath)
+{
+    $path1 = $filePath;
+    $path2 = __DIR__ . $filePath;
+    $path3 = __DIR__ . "/../tests/fixtures/{$filePath}";
+
+    if (file_exists($path1)) {
+        return $path1;
+    } elseif (file_exists($path2)) {
+        return $path2;
+    } else {
+        return $path3;
+    }
+}
+
 function getFormat($path): string
 {
     return pathinfo($path, PATHINFO_EXTENSION);
-}
-
-function getValue($value)
-{
-    return is_bool($value) ? var_export($value, true) : $value;
 }

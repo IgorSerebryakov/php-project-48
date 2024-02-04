@@ -17,8 +17,10 @@
         "files": [
             "src/Diff.php",
             "src/Parsers.php",
+            "src/Formatters.php",
             "formatters/Stylish.php",
-            "formatters/Plain.php"
+            "formatters/Plain.php",
+            "formatters/Json.php"
         ]
     },
     "require": {

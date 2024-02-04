@@ -8,31 +8,49 @@ use function Differ\Differ\genDiff;
 
 class DiffTest extends TestCase
 {
-    public function testJsonStylish(): void
+    /**
+     * @dataProvider additionProvider
+     */
+    public function testStylish($format): void
     {
-        $pathToFile1 = $this->getFixtureFullPath('file1.json');
-        $pathToFile2 = $this->getFixtureFullPath('file2.json');
-        $pathToResultJson = $this->getFixtureFullPath('ResultStylish');
-        $this->assertEquals(file_get_contents($pathToResultJson), genDiff($pathToFile1, $pathToFile2));
+        $pathToFile1 = $this->getFixtureFullPath("file1.{$format}");
+        $pathToFile2 = $this->getFixtureFullPath("file2.{$format}");
+        $pathToResult = $this->getFixtureFullPath('ResultStylish');
+
+        $this->assertEquals(file_get_contents($pathToResult), genDiff($pathToFile1, $pathToFile2));
     }
 
-    public function testYmlStylish(): void
+    /**
+     * @dataProvider additionProvider
+     */
+    public function testPlain($format): void
     {
-        $pathToFile1 = $this->getFixtureFullPath('file1.yml');
-        $pathToFile2 = $this->getFixtureFullPath('file2.yml');
-        $pathToResultYml = $this->getFixtureFullPath('ResultStylish');
-        $this->assertEquals(file_get_contents($pathToResultYml), genDiff($pathToFile1, $pathToFile2));
+        $pathToFile1 = $this->getFixtureFullPath("file1.{$format}");
+        $pathToFile2 = $this->getFixtureFullPath("file2.{$format}");
+        $pathToResult = $this->getFixtureFullPath('ResultPlain');
+
+        $this->assertEquals(file_get_contents($pathToResult), genDiff($pathToFile1, $pathToFile2, 'plain'));
     }
 
-    public function testJsonPlain(): void
+    /**
+     * @dataProvider additionProvider
+     */
+    public function testJson($format): void
     {
-        $pathToFile1 = $this->getFixtureFullPath('file1.json');
-        $pathToFile2 = $this->getFixtureFullPath('file2.json');
-        $pathToResultJson = $this->getFixtureFullPath('ResultPlain');
-        $this->assertEquals(file_get_contents($pathToResultJson), genDiff($pathToFile1, $pathToFile2));
+        $pathToFile1 = $this->getFixtureFullPath("file1.{$format}");
+        $pathToFile2 = $this->getFixtureFullPath("file2.{$format}");
+        $pathToResult = $this->getFixtureFullPath('ResultJson');
+
+        $this->assertEquals(file_get_contents($pathToResult), genDiff($pathToFile1, $pathToFile2, 'json'));
     }
 
-
+    public function additionProvider()
+    {
+        return [
+            ['json'],
+            ['yml']
+        ];
+    }
     public function getFixtureFullPath($fixtureName)
     {
         $parts = [__DIR__, 'fixtures', $fixtureName];

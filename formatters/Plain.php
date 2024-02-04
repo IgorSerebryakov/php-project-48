@@ -22,7 +22,7 @@ function getPlain($tree, $key = '')
 
         } elseif ($val['status'] === 'root') {
             $children = $val['children'];
-            $key .= $val['key'] . ".";
+            $key .= "{$val['key']}.";
             return getPlain($children, $key);
         }
 
