@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9d5f6456ba7d8bb573ecc1bacaab6606",
+    "content-hash": "69f31f8bd25163f644afaaa637641744",
     "packages": [
         {
             "name": "docopt/docopt",
@@ -997,12 +997,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "7b3ae615dca9391a16f5f691e9e3a3488e676399"
+                "reference": "611b48445ec475b89b7b8d76f17a1bb012f8940a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/7b3ae615dca9391a16f5f691e9e3a3488e676399",
-                "reference": "7b3ae615dca9391a16f5f691e9e3a3488e676399",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/611b48445ec475b89b7b8d76f17a1bb012f8940a",
+                "reference": "611b48445ec475b89b7b8d76f17a1bb012f8940a",
                 "shasum": ""
             },
             "require": {
@@ -1090,7 +1090,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-02-06T12:40:36+00:00"
+            "time": "2024-02-06T15:30:15+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -2149,7 +2149,6 @@
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
-        "symfony/yaml": 20,
         "squizlabs/php_codesniffer": 20,
         "phpunit/phpunit": 20
     },

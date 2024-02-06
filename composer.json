@@ -26,7 +26,7 @@
     "require": {
         "docopt/docopt": "^1.0",
         "lstrojny/functional-php": "^1.17",
-        "symfony/yaml": "6.4.x-dev"
+        "symfony/yaml": "^6.3"
     },
     "require-dev": {
         "squizlabs/php_codesniffer": "4.0.x-dev",
