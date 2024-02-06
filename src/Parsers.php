@@ -11,4 +11,4 @@ function parseToArray(string $path, string $format)
     } elseif ($format === "yml" || $format === "yaml") {
         return Yaml::parseFile($path);
     }
-}    
+}
