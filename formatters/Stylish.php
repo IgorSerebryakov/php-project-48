@@ -29,47 +29,47 @@ function getStylishWithoutBraces(array $tree, int $depth = 1): string
     return implode("\n", $coll);
 }
 
-function getStylish($result)
+function getStylish(array $result)
 {
     return getBraces(getStylishWithoutBraces($result));
 }
 
-function getChildrenWithBraces($children, $depth)
+function getChildrenWithBraces(string $children, int $depth)
 {
     return " {\n{$children}\n" . getCurrentSpacesWithoutLeftShit($depth) . "}";
 }
 
-function getSpecialWithKey($value, string $special)
+function getSpecialWithKey(array $value, string $special)
 {
     return "{$special} " . getKey($value) . ":";
 }
 
-function getKey($tree)
+function getKey(array $tree)
 {
     return $tree['key'];
 }
 
-function getValue($tree)
+function getValue(array $tree)
 {
     return $tree['value'];
 }
 
-function getNewValue($tree)
+function getNewValue(array $tree)
 {
     return $tree['newValue'];
 }
 
-function getOldValue($tree)
+function getOldValue(array $tree)
 {
     return $tree['oldValue'];
 }
 
-function getChildren($tree)
+function getChildren(array $tree)
 {
     return $tree['children'];
 }
 
-function getBraces($result)
+function getBraces(string $result)
 {
     return "{\n{$result}\n}";
 }
@@ -87,7 +87,7 @@ function getCurrentSpacesWithLeftShift(int $depth): string
     return getCurrentSpacesWithoutLeftShit($depth, 2);
 }
 
-function getValueToString($value, $depth = 1)
+function getValueToString(mixed $value, int $depth = 1)
 {
     if (is_array($value)) {
         return getArrayValueToString($value, $depth);
@@ -96,7 +96,7 @@ function getValueToString($value, $depth = 1)
     }
 }
 
-function getArrayValueToString(array $value, $depth = 1): string
+function getArrayValueToString(array $value, int $depth = 1): string
 {
     $iter = function ($value, $depth) use (&$iter) {
         if (!is_array($value)) {
@@ -120,7 +120,7 @@ function getArrayValueToString(array $value, $depth = 1): string
     return $iter($value, $depth + 1);
 }
 
-function toString($value)
+function toString(mixed $value)
 {
     if ($value === "") {
         return " ";

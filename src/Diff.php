@@ -6,7 +6,7 @@ use function Differ\Parsers\parseToArray;
 use function Functional\sort;
 use function Differ\Differ\Formatters\getFormatter;
 
-function genDiff($firstFilePath, $secondFilePath, $formatName = 'stylish')
+function genDiff(string $firstFilePath, string $secondFilePath, string $formatName = 'stylish')
 {
     $firstFileFormat = getFormat($firstFilePath);
     $secondFileFormat = getFormat($secondFilePath);
@@ -69,7 +69,7 @@ function getAST(array $dataFromFirstFile, array $dataFromSecondFile): array
     }, $sortedKeys);
 }
 
-function getRealPath($filePath)
+function getRealPath(string $filePath)
 {
     $path1 = $filePath;
     $path2 = __DIR__ . $filePath;
@@ -84,7 +84,7 @@ function getRealPath($filePath)
     }
 }
 
-function getFormat($path): string
+function getFormat(string $path): string
 {
     return pathinfo($path, PATHINFO_EXTENSION);
 }

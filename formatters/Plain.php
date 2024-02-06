@@ -4,7 +4,7 @@ namespace Formatters\Plain;
 
 use function Functional\flatten;
 
-function getPlain($tree, $key = '')
+function getPlain(array $tree, string $key = '')
 {
     $coll = array_map(function ($val) use ($key) {
 
@@ -27,7 +27,7 @@ function getPlain($tree, $key = '')
     return implode("\n", array_filter(flatten($coll)));
 }
 
-function getValue($item)
+function getValue(mixed $item)
 {
     if ($item === null) {
         return 'null';

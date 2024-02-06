@@ -6,14 +6,9 @@ use Symfony\Component\Yaml\Yaml;
 
 function parseToArray(string $path, string $format)
 {
-    switch ($format) {
-        case "json":
-            $array = json_decode(file_get_contents($path), true);
-            break;
-        case ("yml" || "yaml"):
-            $array = Yaml::parseFile($path);
-            break;
+    if ($format === "json") {
+        return json_decode(file_get_contents($path), true);
+    } elseif ($format === "yml" || $format === "yaml") {
+        return Yaml::parseFile($path);
     }
-
-    return $array;
-}
+}    

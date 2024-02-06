@@ -6,7 +6,7 @@ use function Formatters\Json\getJson;
 use function Formatters\Stylish\getStylish;
 use function Formatters\Plain\getPlain;
 
-function getFormatter($formatName, $AST)
+function getFormatter(string $formatName, array $AST)
 {
     switch ($formatName) {
         case "stylish":
