@@ -7,8 +7,8 @@ use function Functional\flatten;
 function getPlain(array $tree, string $key = '')
 {
     $coll = array_map(function ($val) use ($key) {
-        $newKey = $key;
-        $currentKey = $newKey === "" ? "{$val['key']}" : "{$newKey}{$val['key']}";
+        
+        $currentKey = $key === "" ? "{$val['key']}" : "{$key}.{$val['key']}";
 
         if ($val['status'] === 'added') {
             return "Property " . "'{$currentKey}'" . " was added with value: " . getValue($val['value']);
@@ -19,8 +19,7 @@ function getPlain(array $tree, string $key = '')
                 " to " . getValue($val['newValue']);
         } elseif ($val['status'] === 'root') {
             $children = $val['children'];
-            $newKey .= "{$val['key']}.";
-            return getPlain($children, $newKey);
+            return getPlain($children, $currentKey);
         }
     }, $tree);
 
