@@ -121,7 +121,7 @@ function getArrayValueToString (array $value, $depth = 1): string
 function toString($value)
 {
     if ($value === "") {
-        return "";
+        return " ";
     }
     return $value === null ? ' null' : ' ' . trim(var_export($value, true), "'");
 }
