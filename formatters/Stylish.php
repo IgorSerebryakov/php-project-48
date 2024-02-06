@@ -6,17 +6,23 @@ function getStylishWithoutBraces(array $tree, int $depth = 1): string
 {
     $coll = array_map(function ($val) use ($depth) {
         if ($val['status'] === 'added') {
-            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '+') . getValueToString(getValue($val), $depth);
+            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '+')
+                . getValueToString(getValue($val), $depth);
         } elseif ($val['status'] === 'deleted') {
-            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '-') . getValueToString(getValue($val), $depth);
+            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '-')
+                . getValueToString(getValue($val), $depth);
         } elseif ($val['status'] === 'unchanged') {
-            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, ' ') . getValueToString(getValue($val), $depth);
+            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, ' ')
+                . getValueToString(getValue($val), $depth);
         } elseif ($val['status'] === 'changed') {
-            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '-') . getValueToString(getOldValue($val), $depth) . "\n"
-                 . getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '+') . getValueToString(getNewValue($val), $depth);
+            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '-')
+                . getValueToString(getOldValue($val), $depth) . "\n"
+                 . getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, '+')
+                . getValueToString(getNewValue($val), $depth);
         } elseif ($val['status'] === 'root') {
             $children = getStylishWithoutBraces(getChildren($val), $depth + 1);
-            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, ' ') . getChildrenWithBraces($children, $depth);
+            return getCurrentSpacesWithLeftShift($depth) . getSpecialWithKey($val, ' ')
+                . getChildrenWithBraces($children, $depth);
         }
     }, $tree);
 

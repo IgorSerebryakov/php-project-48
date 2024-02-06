@@ -6,7 +6,6 @@ use function Functional\flatten;
 
 function getPlain($tree, $key = '')
 {
-
     $coll = array_map(function ($val) use ($key) {
 
         $currentKey = $key === "" ? "{$val['key']}" : "{$key}{$val['key']}";
@@ -16,14 +15,14 @@ function getPlain($tree, $key = '')
         } elseif ($val['status'] === 'deleted') {
             return "Property " . "'{$currentKey}'" . " was removed";
         } elseif ($val['status'] === 'changed') {
-            return "Property " . "'{$currentKey}'" . " was updated. From " . getValue($val['oldValue']) . " to " . getValue($val['newValue']);
+            return "Property " . "'{$currentKey}'" . " was updated. From " . getValue($val['oldValue']) .
+                " to " . getValue($val['newValue']);
         } elseif ($val['status'] === 'root') {
             $children = $val['children'];
             $key .= "{$val['key']}.";
             return getPlain($children, $key);
         }
-
-        }, $tree);
+    }, $tree);
 
     return implode("\n", array_filter(flatten($coll)));
 }
