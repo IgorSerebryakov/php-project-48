@@ -1,19 +1,16 @@
 <?php
 
-namespace Differ\Differ\Formatters;
+namespace Differ\Formatters;
 
-use function Formatters\Json\getJson;
-use function Formatters\Stylish\getStylish;
-use function Formatters\Plain\getPlain;
+use function Differ\Formatters\Json\getJson;
+use function Differ\Formatters\Stylish\getStylish;
+use function Differ\Formatters\Plain\getPlain;
 
 function getFormatter(string $formatName, array $AST)
 {
-    switch ($formatName) {
-        case "stylish":
-            return getStylish($AST);
-        case "plain":
-            return getPlain($AST);
-        case "json":
-            return getJson($AST);
-    }
+    return match ($formatName) {
+        'stylish' => getStylish($AST),
+        'plain' => getPlain($AST),
+        'json' => getJson($AST)
+    };
 }

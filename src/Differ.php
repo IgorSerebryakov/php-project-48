@@ -4,15 +4,12 @@ namespace Differ\Differ;
 
 use function Differ\Parsers\parseToArray;
 use function Functional\sort;
-use function Differ\Differ\Formatters\getFormatter;
+use function Differ\Formatters\getFormatter;
 
 function genDiff(string $firstFilePath, string $secondFilePath, string $formatName = 'stylish')
 {
-    $firstFileFormat = getFormat($firstFilePath);
-    $secondFileFormat = getFormat($secondFilePath);
-
-    $firstFileData = parseToArray(getRealPath($firstFilePath), $firstFileFormat);
-    $secondFileData = parseToArray(getRealPath($secondFilePath), $secondFileFormat);
+    $firstFileData = parseToArray($firstFilePath);
+    $secondFileData = parseToArray($secondFilePath);
 
     return getFormatter($formatName, getAST($firstFileData, $secondFileData));
 }
@@ -67,24 +64,4 @@ function getAST(array $dataFromFirstFile, array $dataFromSecondFile): array
             ];
         }
     }, $sortedKeys);
-}
-
-function getRealPath(string $filePath)
-{
-    $path1 = $filePath;
-    $path2 = __DIR__ . $filePath;
-    $path3 = __DIR__ . "/../tests/fixtures/{$filePath}";
-
-    if (file_exists($path1)) {
-        return $path1;
-    } elseif (file_exists($path2)) {
-        return $path2;
-    } else {
-        return $path3;
-    }
-}
-
-function getFormat(string $path): string
-{
-    return pathinfo($path, PATHINFO_EXTENSION);
 }

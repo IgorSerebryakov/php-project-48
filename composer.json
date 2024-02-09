@@ -15,12 +15,12 @@
     "minimum-stability": "dev",
     "autoload": {
         "files": [
-            "src/Diff.php",
+            "src/Differ.php",
             "src/Parsers.php",
             "src/Formatters.php",
-            "formatters/Stylish.php",
-            "formatters/Plain.php",
-            "formatters/Json.php"
+            "src/Formatters/Stylish.php",
+            "src/Formatters/Plain.php",
+            "src/Formatters/Json.php"
         ]
     },
     "require": {
