@@ -15,11 +15,26 @@ function parseToArray(string $path)
     }
 }
 
-function getRealPath(string $path): string
+function getRealPath(string $filePath)
 {
-    $fileName = basename($path);
-    return __DIR__ . "/../tests/fixtures/{$fileName}";
+    $path1 = $filePath;
+    $path2 = __DIR__ . $filePath;
+    $path3 = __DIR__ . "/../tests/fixtures/{$filePath}";
+
+    if (file_exists($path1)) {
+        return $path1;
+    } elseif (file_exists($path2)) {
+        return $path2;
+    } else {
+        return $path3;
+    }
 }
+
+//function getRealPath(string $path): string
+//{
+//    $fileName = basename($path);
+//    return __DIR__ . "/../tests/fixtures/{$fileName}";
+//}
 
 function getFormat(string $path): string
 {
