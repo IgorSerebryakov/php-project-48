@@ -6,11 +6,11 @@ use Symfony\Component\Yaml\Yaml;
 
 function parseToArray(string $path)
 {
-    switch (getFormat($path)) {
-        case "json":
+    switch (true) {
+        case getFormat($path) === "json":
             $content = file_get_contents(getRealPath($path));
             return json_decode((string) $content, true);
-        case "yml" || "yaml":
+        case getFormat($path) === "yml" or getFormat($path) === "yaml":
             return Yaml::parseFile($path);
     }
 }
@@ -29,12 +29,6 @@ function getRealPath(string $filePath)
         return $path3;
     }
 }
-
-//function getRealPath(string $path): string
-//{
-//    $fileName = basename($path);
-//    return __DIR__ . "/../tests/fixtures/{$fileName}";
-//}
 
 function getFormat(string $path): string
 {

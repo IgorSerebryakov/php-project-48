@@ -8,9 +8,12 @@ use function Differ\Formatters\Plain\getPlain;
 
 function getFormatter(string $formatName, array $AST)
 {
-    return match ($formatName) {
-        'stylish' => getStylish($AST),
-        'plain' => getPlain($AST),
-        'json' => getJson($AST)
-    };
+    switch ($formatName) {
+        case 'stylish':
+            return getStylish($AST);
+        case 'plain':
+            return getPlain($AST);
+        case 'json':
+            return getJson($AST);
+    }
 }
